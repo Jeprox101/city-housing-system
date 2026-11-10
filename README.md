@@ -1,5 +1,4 @@
 # city-housing-system
-City Housing Development Office Management System.
 CITY HOUSING DEVELOPMENT OFFICE - MANAGEMENT SYSTEM (Front-end prototype)
 =========================================================================
 

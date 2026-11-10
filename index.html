@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>City Housing Development Office</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/forms.css">
+  <link rel="stylesheet" href="assets/css/tables.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <span class="brand-mark" data-icon="building" data-icon-size="22"></span>
+        <div class="brand-text">
+          <strong>City Housing</strong>
+          <span>Development Office</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button type="button" class="nav-item" data-section="dashboard">
+          <span class="nav-icon" data-icon="dashboard"></span><span class="nav-label">Dashboard</span>
+        </button>
+
+        <p class="nav-heading">Administration</p>
+        <button type="button" class="nav-item" data-section="users">
+          <span class="nav-icon" data-icon="users"></span><span class="nav-label">Users</span>
+        </button>
+        <button type="button" class="nav-item" data-section="dataform">
+          <span class="nav-icon" data-icon="form"></span><span class="nav-label">Data Form</span>
+        </button>
+
+        <p class="nav-heading">Applications</p>
+        <button type="button" class="nav-item" data-section="records">
+          <span class="nav-icon" data-icon="list"></span><span class="nav-label">Applicants / Records</span>
+          <span class="nav-count" data-count="records">0</span>
+        </button>
+        <button type="button" class="nav-item" data-section="approved">
+          <span class="nav-icon" data-icon="check"></span><span class="nav-label">Approved</span>
+          <span class="nav-count" data-count="approved">0</span>
+        </button>
+        <button type="button" class="nav-item" data-section="review">
+          <span class="nav-icon" data-icon="clock"></span><span class="nav-label">For Review</span>
+          <span class="nav-count" data-count="review">0</span>
+        </button>
+        <button type="button" class="nav-item" data-section="survey">
+          <span class="nav-icon" data-icon="map"></span><span class="nav-label">For Survey</span>
+          <span class="nav-count" data-count="survey">0</span>
+        </button>
+        <button type="button" class="nav-item" data-section="rejected">
+          <span class="nav-icon" data-icon="x"></span><span class="nav-label">Rejected / Denied</span>
+          <span class="nav-count" data-count="rejected">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">Front-end prototype<br>Data is saved in this browser only.</div>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- ===== Main area ===== -->
+    <div class="main">
+      <header class="topbar">
+        <button type="button" class="icon-btn menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false" data-icon="menu" data-icon-size="22"></button>
+        <h1 class="page-title" id="page-title">Dashboard</h1>
+
+        <div class="user-switcher">
+          <span class="avatar" id="current-user-avatar">?</span>
+          <div class="user-switcher-text">
+            <label for="current-user-select">Signed in as</label>
+            <select id="current-user-select"></select>
+          </div>
+          <span class="badge badge-role-staff" id="current-user-role"></span>
+        </div>
+      </header>
+
+      <main class="content" id="main-content">
+        <section class="page" id="section-dashboard"><div id="dashboard-root"></div></section>
+        <section class="page" id="section-users" hidden><div id="users-root"></div></section>
+        <section class="page" id="section-dataform" hidden><div id="dataform-root"></div></section>
+        <section class="page" id="section-records" hidden><div id="records-root"></div></section>
+        <section class="page" id="section-approved" hidden><div id="approved-root"></div></section>
+        <section class="page" id="section-review" hidden><div id="review-root"></div></section>
+        <section class="page" id="section-survey" hidden><div id="survey-root"></div></section>
+        <section class="page" id="section-rejected" hidden><div id="rejected-root"></div></section>
+      </main>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="confirm-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+
+  <!-- Sample data first, then the data layer, then the features.
+       Plain scripts (no ES modules) so Live Server and file:// both work.
+       navigation.js must stay last: it starts the app. -->
+  <script src="assets/data/status.js"></script>
+  <script src="assets/data/applicants.js"></script>
+  <script src="assets/data/users.js"></script>
+
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/filtering.js"></script>
+  <script src="assets/js/applicants.js"></script>
+  <script src="assets/js/dataForm.js"></script>
+  <script src="assets/js/editing.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script src="assets/js/users.js"></script>
+  <script src="assets/js/navigation.js"></script>
+</body>
+</html>

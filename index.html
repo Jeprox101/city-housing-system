@@ -526,8 +526,7 @@ th.sorted-desc::after { border-top: 5px solid currentColor; border-bottom-width:
         <div class="user-switcher">
           <span class="avatar" id="current-user-avatar">?</span>
           <div class="user-switcher-text">
-            <label for="current-user-select">Signed in as</label>
-            <select id="current-user-select"></select>
+            <select id="current-user-select" aria-label="Signed in as"></select>
           </div>
           <span class="badge badge-role-staff" id="current-user-role"></span>
         </div>
@@ -586,13 +585,33 @@ window.APP_CONFIG = {
   sexes: ["Male", "Female"],
   civilStatuses: ["Single", "Married", "Widowed", "Separated", "Divorced"],
 
-  /* Suggestions shown in the Province / City / Barangay inputs.
-     Staff can still type any value. Edit these lists freely. */
+  /* Location choices for applicant records. */
   provinceSuggestions: ["Samar"],
   citySuggestions: ["Calbayog City"],
   barangaySuggestions: [
-    "Poblacion", "San Roque", "Santa Cruz", "San Isidro", "Mabini",
-    "Rizal", "Bagong Silang", "Magsaysay", "Del Pilar", "Burgos"
+    "Acedillo", "Aguit-itan", "Alibaba", "Amampacang", "Anislag", "Awang East", "Awang West",
+    "Ba-ay", "Bagacay", "Bagong Lipunan", "Baja", "Balud", "Bante", "Bantian", "Basud",
+    "Bayo", "Begaho", "Binaliw", "Bontay", "Buenavista", "Bugtong", "Cabacungan", "Cabatuan",
+    "Cabicahan", "Cabugawan", "Cacaransan", "Cag-anahaw", "Cag-anibong", "Cag-olango",
+    "Cagbanayacao", "Cagbayang", "Cagbilwang", "Cagboborac", "Caglanipao Sur",
+    "Cagmanipis Norte", "Cagmanipis Sur", "Cagnipa", "Cagsalaosao", "Cahumpan", "Calocnayan",
+    "Cangomaod", "Canhumadac", "Capacuhan", "Capoocan", "Carayman", "Carmen", "Catabunan",
+    "Caybago", "Central", "Cogon", "Dagum", "Danao I", "Danao II", "Dawo", "De Victoria",
+    "Dinabongan", "Dinagan", "Dinawacan", "Esperanza", "Gabay", "Gadgaran", "Gasdo", "Geragaan",
+    "Guin-on", "Guinbaoyan Norte", "Guinbaoyan Sur", "Hamorawon", "Helino", "Hibabngan",
+    "Hibatang", "Higasaan", "Himalandrog", "Hugon Rosales", "Jacinto", "Jimautan",
+    "Jose A. Roño", "Kalilihan", "Kilikili", "La Paz", "Langoyon", "Lapaan", "Libertad",
+    "Limarayon", "Longsob", "Lonoy", "Looc", "Mabini I", "Mabini II", "Macatingog", "Mag-ubay",
+    "Malaga", "Malajog", "Malayog", "Malopalo", "Mancol", "Manguino-o", "Mantaong",
+    "Manuel Barral, Sr.", "Marcatubig", "Matobato", "Mawacat", "Maybog", "Maysalong", "Migara",
+    "Nabang", "Nag-uma", "Naga", "Navarro", "Nijaga", "Oboob", "Obrero", "Olera", "Oquendo",
+    "Osmeña", "Pagbalican", "Palanas", "Palanogan", "Panlayahan", "Panonongon", "Panoypoy",
+    "Patong", "Payahan", "Peña", "Pilar", "Pinamorotan", "Quezon", "Rawis", "Rizal I", "Rizal II",
+    "Roxas I", "Roxas II", "Saljag", "Salvacion", "San Antonio", "San Isidro", "San Joaquin",
+    "San Jose", "San Policarpo", "San Rufino", "Saputan", "Sigo", "Sinantan",
+    "Sinidman Occidental", "Sinidman Oriental", "Tabawan", "Talahiban", "Tanval", "Tapae",
+    "Tarabucan", "Tigbe", "Tinambacan Norte", "Tinambacan Sur", "Tinaplacan", "Tomaliguez",
+    "Trinidad", "Victory", "Villahermosa"
   ],
 
   /* Default location for new applications. */
@@ -1925,14 +1944,18 @@ var DataForm = (function () {
     v = v || {};
     var today = DB.todayISO();
     var age = v.birthdate ? Utils.computeAge(v.birthdate) : "";
+    var assignedStaffControl = prefix === "add"
+      ? input(prefix, "assignedStaff", "text", v.assignedStaff, 'readonly aria-readonly="true"')
+      : select(prefix, "assignedStaff", staffNames(v.assignedStaff), v.assignedStaff, "Select staff");
     var provinces = APP_CONFIG.provinceSuggestions.slice();
     var cities = APP_CONFIG.citySuggestions.slice();
     var barangays = APP_CONFIG.barangaySuggestions.slice();
     DB.getApplicants().forEach(function (a) {
       if (a.province && provinces.indexOf(a.province) === -1) provinces.push(a.province);
       if (a.city && cities.indexOf(a.city) === -1) cities.push(a.city);
-      if (a.barangay && barangays.indexOf(a.barangay) === -1) barangays.push(a.barangay);
     });
+    // Keep an existing legacy value selectable while editing older records.
+    if (v.barangay && barangays.indexOf(v.barangay) === -1) barangays.push(v.barangay);
 
     var statusList = APP_CONFIG.statuses.map(function (s) { return s.value; });
 
@@ -1954,7 +1977,7 @@ var DataForm = (function () {
       '<fieldset class="form-section"><legend>Address information</legend><div class="form-grid">' +
         group(prefix, "province", "Province", input(prefix, "province", "text", APP_CONFIG.formDefaults.province, 'maxlength="60" readonly aria-readonly="true"')) +
         group(prefix, "city", "City / Municipality", input(prefix, "city", "text", APP_CONFIG.formDefaults.city, 'maxlength="60" readonly aria-readonly="true"')) +
-        group(prefix, "barangay", "Barangay", input(prefix, "barangay", "text", v.barangay, 'list="' + prefix + '-barangay-list" maxlength="60" autocomplete="off"') + datalist(prefix + "-barangay-list", barangays)) +
+        group(prefix, "barangay", "Barangay", select(prefix, "barangay", barangays, v.barangay, "Select barangay")) +
         group(prefix, "street", "Street / Purok", input(prefix, "street", "text", v.street, 'maxlength="80" autocomplete="off"'), true) +
       "</div></fieldset>" +
 
@@ -1963,7 +1986,7 @@ var DataForm = (function () {
         group(prefix, "housingProgram", "Housing program", select(prefix, "housingProgram", APP_CONFIG.housingPrograms.concat(
           v.housingProgram && APP_CONFIG.housingPrograms.indexOf(v.housingProgram) === -1 ? [v.housingProgram] : []), v.housingProgram, "Select program")) +
         group(prefix, "status", "Application status", select(prefix, "status", statusList, v.status, "Select status")) +
-        group(prefix, "assignedStaff", "Assigned staff", select(prefix, "assignedStaff", staffNames(v.assignedStaff), v.assignedStaff, "Select staff")) +
+        group(prefix, "assignedStaff", "Assigned staff", assignedStaffControl) +
         group(prefix, "remarks", "Remarks", '<textarea id="' + prefix + '-remarks" name="remarks" rows="3" maxlength="300">' + Utils.esc(v.remarks) + "</textarea>", true) +
       "</div></fieldset>";
   }
@@ -2071,12 +2094,14 @@ var DataForm = (function () {
   var initialSnapshot = "";
 
   function newRecordDefaults() {
+    var user = App.getCurrentUser();
     return {
       id: DB.generateApplicationId(),
       applicationDate: DB.todayISO(),
       status: APP_CONFIG.defaultStatus,
       province: APP_CONFIG.formDefaults.province,
-      city: APP_CONFIG.formDefaults.city
+      city: APP_CONFIG.formDefaults.city,
+      assignedStaff: user && user.role !== "Viewer" ? user.fullName : ""
     };
   }
 
@@ -2088,6 +2113,7 @@ var DataForm = (function () {
     var result = validate(root, "add");
     if (!result.valid) { App.toast("Please fix the highlighted fields.", "error"); return; }
     var data = result.data;
+    data.assignedStaff = App.currentUserName();
 
     // Possible duplicate: same name and birthdate
     var duplicate = DB.getApplicants().filter(function (a) {

@@ -65,7 +65,7 @@ button { cursor: pointer; }
   z-index: 30;
 }
 .brand { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--border); height: var(--topbar-height); }
-.brand-mark { width: 36px; height: 36px; border-radius: var(--radius); background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; }
+.brand-mark { width: 36px; height: 36px; border-radius: var(--radius); object-fit: contain; flex-shrink: 0; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
 .brand-text strong { font-size: 0.95rem; }
 .brand-text span { font-size: 0.8rem; color: var(--muted); }
@@ -92,6 +92,12 @@ button { cursor: pointer; }
 .sidebar-backdrop { display: none; }
 
 .main { margin-left: var(--sidebar-width); min-height: 100vh; display: flex; flex-direction: column; }
+body.viewer-mode .sidebar,
+body.viewer-mode .sidebar-backdrop { display: none !important; }
+body.viewer-mode .main { margin-left: 0; }
+body.viewer-mode .content { display: flex; justify-content: center; max-width: none; }
+body.viewer-mode .content > .page { width: 100%; max-width: 900px; }
+body.viewer-mode .topbar .menu-toggle { display: none; }
 
 .topbar {
   position: sticky; top: 0; z-index: 20;
@@ -102,6 +108,9 @@ button { cursor: pointer; }
 }
 .page-title { font-size: 1.15rem; font-weight: 600; flex: 1; }
 .topbar .menu-toggle { display: none; }
+.topbar-brand { display: none; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.topbar-brand .brand-mark { width: 36px; height: 36px; }
+body.viewer-mode .topbar-brand { display: flex; }
 
 .user-switcher { display: flex; align-items: center; gap: 10px; }
 .user-switcher-text { display: flex; flex-direction: column; line-height: 1.2; }
@@ -456,7 +465,7 @@ th.sorted-desc::after { border-top: 5px solid currentColor; border-bottom-width:
     <!-- ===== Sidebar ===== -->
     <aside class="sidebar" id="sidebar" aria-label="Main navigation">
       <div class="brand">
-        <span class="brand-mark" data-icon="building" data-icon-size="22"></span>
+        <img class="brand-mark" src="LogoCHDO.png" alt="City Housing Development Office logo">
         <div class="brand-text">
           <strong>City Housing</strong>
           <span>Development Office</span>
@@ -506,6 +515,13 @@ th.sorted-desc::after { border-top: 5px solid currentColor; border-bottom-width:
       <header class="topbar">
         <button type="button" class="icon-btn menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false" data-icon="menu" data-icon-size="22"></button>
         <h1 class="page-title" id="page-title">Dashboard</h1>
+        <div class="topbar-brand" id="viewer-brand" aria-label="City Housing Development Office" hidden>
+          <img class="brand-mark" src="LogoCHDO.png" alt="">
+          <div class="brand-text">
+            <strong>City Housing</strong>
+            <span>Development Office</span>
+          </div>
+        </div>
 
         <div class="user-switcher">
           <span class="avatar" id="current-user-avatar">?</span>
@@ -602,9 +618,9 @@ window.APP_CONFIG = {
 window.SAMPLE_ACTIVITIES = [
   { id: "ACT-0005", type: "approved", message: "Application CHDO-2026-0001 was approved. ",             user: "Jaypee Planque",   timestamp: "2026-11-06T09:15:00" },
   { id: "ACT-0004", type: "survey",   message: "Application CHDO-2026-0014 was sent for site survey.", user: "Yonjhel Calipayan", timestamp: "2026-11-05T14:40:00" },
-  { id: "ACT-0003", type: "add",      message: "New applicant registered: CHDO-2026-0019.",            user: "Jelyn Mores",      timestamp: "2026-11-04T10:05:00" },
+  { id: "ACT-0003", type: "add",      message: "New applicant registered: CHDO-2026-0019.",            user: "Jelyn Amores",      timestamp: "2026-11-04T10:05:00" },
   { id: "ACT-0002", type: "rejected", message: "Application CHDO-2026-0008 was rejected.",             user: "Jaypee Planque",   timestamp: "2026-11-03T16:20:00" },
-  { id: "ACT-0001", type: "user",     message: "User account for Kenowev Mores was created.",           user: "Jaypee Planque",   timestamp: "2026-11-02T08:30:00" }
+  { id: "ACT-0001", type: "user",     message: "User account for Kenowev Amores was created.",           user: "Jaypee Planque",   timestamp: "2026-11-02T08:30:00" }
 ];
 
 </script>
@@ -632,6 +648,9 @@ window.SAMPLE_ACTIVITIES = [
     };
   }
 
+
+  
+
   var SHP = "Socialized Housing Program", RAP = "Resettlement Assistance Program",
       LAP = "Lot Allocation Program", HLA = "Housing Loan Assistance", RHP = "Rental Housing Program";
 
@@ -655,7 +674,9 @@ window.SAMPLE_ACTIVITIES = [
     rec("CHDO-2026-0017","Marites","Soriano","Velasco","","1986-01-21",40,"Female","Married","09181230017","marites.velasco@mail.example","Bagong Silang","Purok 3","2026-09-15",LAP,"For Review","Awaiting land title verification.","Jose Reyes"),
     rec("CHDO-2026-0018","Leonardo","De Guzman","Mercado","","1974-10-28",52,"Male","Married","09181230018","","Magsaysay","Purok 6","2026-10-06",SHP,"For Survey","Survey team assigned.","Carlo Mendoza"),
     rec("CHDO-2026-0019","Jasmine Faith","","Robles","","2000-06-16",26,"Female","Single","09181230019","jasmine.robles@mail.example","Del Pilar","Purok 2","2026-10-27",RHP,"For Review","New application.","Ana Villanueva"),
-    rec("CHDO-2026-0020","Alfredo","Tan","Hernandez","","1962-02-12",64,"Male","Married","09181230020","","Burgos","Purok 4, Sampaguita St.","2026-11-03",RAP,"Rejected","Incomplete documents after two notices.","Maria Santos")
+    rec("CHDO-2026-0020","Alfredo","Tan","Hernandez","","1962-02-12",64,"Male","Married","09181230020","","Burgos","Purok 4, Sampaguita St.","2026-11-03",RAP,"Rejected","Incomplete documents after two notices.","Maria Santos"),
+    rec("CHDO-2026-0021","Kenowev","","Amores","","1992-04-18",34,"Male","Single","09181230021","kenowev.amores@mail.example","Poblacion","Purok 2, Mabuhay St.","2026-11-04",SHP,"For Review","Sample applicant profile.","Jose Reyes"),
+    rec("CHDO-2026-0022","Emmanuel","","Conarco","","1990-08-12",36,"Male","Single","09181230022","emmanuel.conarco@mail.example","San Roque","Purok 4, Mabini St.","2026-11-05",RAP,"For Review","Sample applicant profile.","Jose Reyes")
   ];
 })();
 
@@ -670,8 +691,8 @@ window.SAMPLE_USERS = [
   { id: "USR-001", fullName: "Jaypee Planque",     username: "msantos",     email: "maria.santos@housing.example",     contactNumber: "09171110001", position: "Housing Office Head",    role: "Administrator", status: "Active",   dateCreated: "2026-01-05" },
   { id: "USR-002", fullName: "Yonjhel Calipayan",  username: "jreyes",      email: "jose.reyes@housing.example",       contactNumber: "09171110002", position: "Housing Officer",        role: "Staff",         status: "Active",   dateCreated: "2026-01-12" },
   { id: "USR-003", fullName: "Jelyn Mores",        username: "avillanueva", email: "ana.villanueva@housing.example",   contactNumber: "09171110003", position: "Records Clerk",          role: "Staff",         status: "Active",   dateCreated: "2026-02-03" },
-  { id: "USR-004", fullName: "Emmanuel Conarco",   username: "cmendoza",    email: "carlo.mendoza@housing.example",    contactNumber: "09171110004", position: "Site Survey Officer",    role: "Staff",         status: "Active",   dateCreated: "2026-02-20" },
-  { id: "USR-005", fullName: "Kenowev Mores",      username: "lramos",      email: "liza.ramos@housing.example",       contactNumber: "09171110005", position: "Auditor (Observer)",     role: "Viewer",        status: "Active",   dateCreated: "2026-11-02" },
+  { id: "USR-004", fullName: "Emmanuel Conarco",   username: "cmendoza",    email: "carlo.mendoza@housing.example",    contactNumber: "09171110004", position: "Site Survey Officer",    role: "Viewer",        status: "Active",   dateCreated: "2026-02-20", applicantId: "CHDO-2026-0022" },
+  { id: "USR-005", fullName: "Kenowev Amores",     username: "kamores",     email: "kenowev.amores@housing.example",  contactNumber: "09171110005", position: "Auditor (Observer)",     role: "Viewer",        status: "Active",   dateCreated: "2026-11-02", applicantId: "CHDO-2026-0021" },
   { id: "USR-006", fullName: "Ben Torres",     username: "btorres",     email: "ben.torres@housing.example",       contactNumber: "09171110006", position: "Former Housing Officer", role: "Staff",         status: "Inactive", dateCreated: "2026-03-01" }
 ];
 
@@ -695,6 +716,7 @@ var DB = (function () {
     activities: "chdo_activities",
     seeded: "chdo_seeded_v1",
     renamedUsers: "chdo_renamed_users_v1",
+    applicantViewers: "chdo_applicant_viewers_v1",
     currentUser: "chdo_current_user"
   };
 
@@ -744,7 +766,8 @@ var DB = (function () {
     "Jose Reyes": "Yonjhel Calipayan",
     "Ana Villanueva": "Jelyn Mores",
     "Carlo Mendoza": "Emmanuel Conarco",
-    "Liza Ramos": "Kenowev Mores"
+    "Liza Ramos": "Kenowev Amores",
+    "Kenowev Mores": "Kenowev Amores"
   };
 
   function migrateRenamedUsers() {
@@ -772,6 +795,135 @@ var DB = (function () {
     if (usersSaved && applicantsSaved) writeFlag(KEYS.renamedUsers, "1");
   }
 
+  function migrateEmmanuelViewer() {
+    var migrationKey = "chdo_emmanuel_viewer_v1";
+    if (readFlag(migrationKey)) return;
+
+    var users = getUsers();
+    var user = users.filter(function (item) {
+      return item.id === "USR-004" && item.fullName === "Emmanuel Conarco";
+    })[0];
+    if (user && user.role !== "Viewer") {
+      user.role = "Viewer";
+      if (!write(KEYS.users, users)) return;
+    }
+    writeFlag(migrationKey, "1");
+  }
+
+  function createViewerApplicant(user, applicants) {
+    var nameParts = String(user.fullName || "").trim().split(/\s+/).filter(Boolean);
+    var firstName = nameParts.shift() || "Viewer";
+    var lastName = nameParts.length ? nameParts.pop() : "";
+    return {
+      id: generateApplicationIdFor(applicants),
+      firstName: firstName,
+      middleName: nameParts.join(" "),
+      lastName: lastName,
+      suffix: "",
+      birthdate: "",
+      age: "",
+      sex: "",
+      civilStatus: "",
+      contactNumber: user.contactNumber || "",
+      email: user.email || "",
+      province: APP_CONFIG.formDefaults.province,
+      city: APP_CONFIG.formDefaults.city,
+      barangay: "",
+      street: "",
+      applicationDate: todayISO(),
+      housingProgram: APP_CONFIG.housingPrograms[0],
+      status: APP_CONFIG.defaultStatus,
+      remarks: "Profile created for Viewer account.",
+      assignedStaff: "",
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  function seedApplicantViewers() {
+    var users = getUsers();
+    var applicants = getApplicants();
+    var usersChanged = false;
+    var applicantsChanged = false;
+    var assignedApplicantIds = {};
+    var sampleViewerProfiles = {
+      "Kenowev Amores": "CHDO-2026-0021",
+      "Emmanuel Conarco": "CHDO-2026-0022"
+    };
+
+    applicants.slice(0, 5).forEach(function (applicant) {
+      if (users.some(function (user) {
+        return user.role === "Viewer" && user.applicantId === applicant.id;
+      })) return;
+
+      var fullName = [applicant.firstName, applicant.middleName, applicant.lastName, applicant.suffix]
+        .filter(Boolean).join(" ");
+      users.push({
+        id: generateUserIdFor(users),
+        fullName: fullName,
+        username: "a-" + String(applicant.id).toLowerCase(),
+        email: applicant.email || "",
+        contactNumber: applicant.contactNumber || "",
+        position: "Applicant",
+        role: "Viewer",
+        status: "Active",
+        dateCreated: todayISO(),
+        applicantId: applicant.id
+      });
+      usersChanged = true;
+    });
+
+    Object.keys(sampleViewerProfiles).forEach(function (fullName) {
+      var profileId = sampleViewerProfiles[fullName];
+      var profile = applicants.filter(function (applicant) { return applicant.id === profileId; })[0];
+      if (!profile) {
+        profile = (window.SAMPLE_APPLICANTS || []).filter(function (applicant) {
+          return applicant.id === profileId;
+        })[0];
+        if (profile) {
+          applicants.push(clone(profile));
+          applicantsChanged = true;
+        }
+      }
+    });
+
+    users.forEach(function (user) {
+      if (user.fullName === "Kenowev Mores") {
+        user.fullName = "Kenowev Amores";
+        usersChanged = true;
+      }
+      if (user.role !== "Viewer") return;
+
+      var sampleProfileId = sampleViewerProfiles[user.fullName];
+      var linkedApplicant = sampleProfileId
+        ? applicants.filter(function (applicant) { return applicant.id === sampleProfileId; })[0]
+        : applicants.filter(function (applicant) { return applicant.id === user.applicantId; })[0];
+
+      if (!linkedApplicant || assignedApplicantIds[linkedApplicant.id]) {
+        linkedApplicant = applicants.filter(function (applicant) {
+          return !assignedApplicantIds[applicant.id] &&
+            [applicant.firstName, applicant.middleName, applicant.lastName, applicant.suffix]
+              .filter(Boolean).join(" ").toLowerCase() === user.fullName.toLowerCase();
+        })[0];
+      }
+
+      if (!linkedApplicant || assignedApplicantIds[linkedApplicant.id]) {
+        linkedApplicant = createViewerApplicant(user, applicants);
+        applicants.push(linkedApplicant);
+        applicantsChanged = true;
+      }
+
+      assignedApplicantIds[linkedApplicant.id] = true;
+      if (user.applicantId !== linkedApplicant.id) {
+        user.applicantId = linkedApplicant.id;
+        usersChanged = true;
+      }
+    });
+
+    var applicantsSaved = !applicantsChanged || write(KEYS.applicants, applicants);
+    var usersSaved = !usersChanged || write(KEYS.users, users);
+    if (applicantsSaved && usersSaved) writeFlag(KEYS.applicantViewers, "1");
+  }
+
   /** Copy the sample data into LocalStorage the first time only. */
   function init() {
     if (!readFlag(KEYS.seeded)) {
@@ -781,6 +933,8 @@ var DB = (function () {
       writeFlag(KEYS.seeded, "1");
     }
     migrateRenamedUsers();
+    migrateEmmanuelViewer();
+    seedApplicantViewers();
   }
 
   /** Remove everything and load the sample data again. */
@@ -803,9 +957,13 @@ var DB = (function () {
 
   /** Next ID in the form CHDO-YYYY-0001 (never reuses an existing ID). */
   function generateApplicationId() {
+    return generateApplicationIdFor(getApplicants());
+  }
+
+  function generateApplicationIdFor(applicants) {
     var prefix = "CHDO-" + new Date().getFullYear() + "-";
     var highest = 0;
-    getApplicants().forEach(function (a) {
+    applicants.forEach(function (a) {
       if (a.id.indexOf(prefix) === 0) {
         var n = parseInt(a.id.slice(prefix.length), 10);
         if (!isNaN(n) && n > highest) highest = n;
@@ -849,8 +1007,12 @@ var DB = (function () {
   }
 
   function generateUserId() {
+    return generateUserIdFor(getUsers());
+  }
+
+  function generateUserIdFor(users) {
     var highest = 0;
-    getUsers().forEach(function (u) {
+    users.forEach(function (u) {
       var n = parseInt(String(u.id).replace("USR-", ""), 10);
       if (!isNaN(n) && n > highest) highest = n;
     });
@@ -860,6 +1022,7 @@ var DB = (function () {
   /** Insert or update a user. Usernames and e-mails must be unique. */
   function saveUser(user, isNew) {
     var list = getUsers();
+    var applicants = getApplicants();
     var index = -1;
     list.forEach(function (u, i) { if (u.id === user.id) index = i; });
 
@@ -877,11 +1040,20 @@ var DB = (function () {
 
     if (isNew) {
       if (index !== -1) return { ok: false, error: "User ID " + user.id + " already exists." };
-      list.push(user);
     } else {
       if (index === -1) return { ok: false, error: "User was not found." };
-      list[index] = user;
     }
+
+    if (user.role === "Viewer" && !user.applicantId) {
+      var applicant = createViewerApplicant(user, applicants);
+      if (!write(KEYS.applicants, applicants.concat([applicant]))) {
+        return { ok: false, error: "The Viewer profile could not be saved because browser storage is full or blocked." };
+      }
+      user.applicantId = applicant.id;
+    }
+
+    if (isNew) list.push(user);
+    else list[index] = user;
     return write(KEYS.users, list) ? { ok: true } : { ok: false, error: "Browser storage is full or blocked." };
   }
 
@@ -1086,6 +1258,20 @@ var App = (function () {
     return !!perms[action];
   }
 
+  function getVisibleApplicants() {
+    var user = getCurrentUser();
+    var applicants = DB.getApplicants();
+    if (!user || user.role !== "Viewer") return applicants;
+    return user.applicantId
+      ? applicants.filter(function (applicant) { return applicant.id === user.applicantId; })
+      : [];
+  }
+
+  function canViewApplicant(id) {
+    var user = getCurrentUser();
+    return !!user && (user.role !== "Viewer" || user.applicantId === id);
+  }
+
   /* ---------- Toast notifications ---------- */
 
   function toast(message, type) {
@@ -1200,6 +1386,19 @@ var App = (function () {
     var roleBadge = document.getElementById("current-user-role");
     roleBadge.textContent = current ? current.role : "";
     document.getElementById("current-user-avatar").textContent = current ? Utils.initials(current.fullName) : "?";
+    var viewer = current && current.role === "Viewer";
+    document.body.classList.toggle("viewer-mode", !!viewer);
+    document.getElementById("page-title").hidden = !!viewer;
+    document.getElementById("viewer-brand").hidden = !viewer;
+    document.querySelectorAll(".nav-item[data-section]").forEach(function (item) {
+      var section = item.getAttribute("data-section");
+      item.hidden = viewer && section !== "records";
+    });
+    document.querySelectorAll(".nav-heading").forEach(function (heading) {
+      heading.hidden = viewer;
+    });
+    var recordsLabel = document.querySelector('.nav-item[data-section="records"] .nav-label');
+    if (recordsLabel) recordsLabel.textContent = viewer ? "My Profile" : "Applicants / Records";
   }
 
   function injectStaticIcons() {
@@ -1230,6 +1429,7 @@ var App = (function () {
 
   return {
     icon: icon, can: can, getCurrentUser: getCurrentUser, currentUserName: currentUserName,
+    getVisibleApplicants: getVisibleApplicants, canViewApplicant: canViewApplicant,
     toast: toast, openModal: openModal, closeModal: closeModal, confirm: confirmDialog,
     refreshAll: refreshAll, start: start
   };
@@ -1454,7 +1654,7 @@ var Applicants = (function () {
 
   /** Records that belong to this page (before search / filters). */
   function scopedRecords(view) {
-    var all = DB.getApplicants();
+    var all = App.getVisibleApplicants();
     if (!view.statuses) return all;
     return all.filter(function (a) { return view.statuses.indexOf(a.status) !== -1; });
   }
@@ -1517,6 +1717,10 @@ var Applicants = (function () {
     var view = VIEWS[key];
     var m = mounted[key];
     var root = m.root, state = m.state;
+    var user = App.getCurrentUser();
+    var viewer = !!(user && user.role === "Viewer");
+    root.querySelector(".page-header h2").textContent = viewer ? "My Application" : view.title;
+    root.querySelector(".page-header p").textContent = viewer ? "Your housing application." : view.description;
 
     var scoped = scopedRecords(view);
     Filtering.syncControls(root, state, scoped, view.statusFilter);
@@ -1571,6 +1775,18 @@ var Applicants = (function () {
 
   /** Public: show one page (called by navigation). */
   function render(key) {
+    var user = App.getCurrentUser();
+    if (user && user.role === "Viewer") {
+      mounted[key] = null;
+      var root = document.getElementById(VIEWS[key].rootId);
+      var applicant = App.getVisibleApplicants()[0];
+      root.innerHTML = applicant
+        ? '<div class="page-header"><div><h2>My Applicant Profile</h2><p>Your application details.</p></div></div>' +
+          '<section class="card"><div class="card-body">' + profileHTML(applicant) + "</div></section>"
+        : '<div class="page-header"><div><h2>My Applicant Profile</h2></div></div>' +
+          '<section class="card"><div class="card-body"><div class="empty-state"><strong>No application is linked to this Viewer account.</strong></div></div></section>';
+      return;
+    }
     if (!mounted[key]) mount(key);
     draw(key);
   }
@@ -1610,6 +1826,7 @@ var Applicants = (function () {
   }
 
   function viewApplicant(id) {
+    if (!App.canViewApplicant(id)) { App.toast("You can only view your own application.", "error"); return; }
     var a = DB.getApplicant(id);
     if (!a) { App.toast("That record could not be found.", "error"); return; }
     var footer = '<button type="button" class="btn btn-secondary" data-close-modal>Close</button>' +
@@ -2073,6 +2290,10 @@ var Dashboard = (function () {
 
   function quickActions() {
     var html = "";
+    var user = App.getCurrentUser();
+    if (user && user.role === "Viewer") {
+      return '<button type="button" class="btn btn-secondary" data-goto="records">' + App.icon("list", 16) + " View my application</button>";
+    }
     if (App.can("addApplicant")) html += '<button type="button" class="btn btn-primary" data-goto="dataform">' + App.icon("plus", 16) + " Add applicant</button>";
     html += '<button type="button" class="btn btn-secondary" data-goto="records">' + App.icon("list", 16) + " View all records</button>";
     html += '<button type="button" class="btn btn-secondary" data-goto="review">' + App.icon("clock", 16) + " Open For Review</button>";
@@ -2082,13 +2303,15 @@ var Dashboard = (function () {
   }
 
   function render() {
-    var list = DB.getApplicants();
+    var user = App.getCurrentUser();
+    var viewer = user && user.role === "Viewer";
+    var list = App.getVisibleApplicants();
     var rejectedTotal = countBy(list, "Rejected") + countBy(list, "Denied");
     var today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
     var root = document.getElementById("dashboard-root");
 
     root.innerHTML =
-      '<div class="page-header"><div><h2>Dashboard</h2><p>Overview of housing applications as of ' + today + ".</p></div></div>" +
+      '<div class="page-header"><div><h2>' + (viewer ? "My Application" : "Dashboard") + '</h2><p>' + (viewer ? "Your housing application." : "Overview of housing applications as of " + today + ".") + "</p></div></div>" +
       '<div class="stat-grid">' +
         statCard("records", "users", "total", "Total Applicants", list.length) +
         statCard("approved", "check", "approved", "Approved Applications", countBy(list, "Approved")) +
@@ -2097,13 +2320,13 @@ var Dashboard = (function () {
         statCard("rejected", "x", "rejected", "Rejected / Denied", rejectedTotal) +
       "</div>" +
       '<div class="dash-grid">' +
-        '<section class="card dash-wide"><div class="card-header"><h3>Recent Applications</h3>' +
+        '<section class="card dash-wide"><div class="card-header"><h3>' + (viewer ? "My Application" : "Recent Applications") + "</h3>" +
           '<button type="button" class="btn btn-link" data-goto="records">View all</button></div>' +
           '<div class="table-wrap"><table class="data-table"><thead><tr><th>Application ID</th><th>Applicant</th><th>Date</th><th>Status</th><th class="col-actions">View</th></tr></thead>' +
           "<tbody>" + recentRows(list) + "</tbody></table></div></section>" +
         '<section class="card"><div class="card-header"><h3>Application Status Overview</h3></div><div class="card-body">' + overviewBars(list) + "</div></section>" +
         '<section class="card"><div class="card-header"><h3>Quick Actions</h3></div><div class="card-body quick-actions">' + quickActions() + "</div></section>" +
-        '<section class="card dash-wide"><div class="card-header"><h3>Recent Activity</h3></div><ul class="activity-list">' + activityItems() + "</ul></section>" +
+        (viewer ? "" : '<section class="card dash-wide"><div class="card-header"><h3>Recent Activity</h3></div><ul class="activity-list">' + activityItems() + "</ul></section>") +
       "</div>";
 
     root.onclick = function (e) {
@@ -2360,7 +2583,8 @@ var Users = (function () {
         id: existing ? existing.id : DB.generateUserId(),
         fullName: data.fullName, username: data.username, email: data.email,
         contactNumber: data.contactNumber, position: data.position, role: data.role, status: data.status,
-        dateCreated: existing ? existing.dateCreated : DB.todayISO()
+        dateCreated: existing ? existing.dateCreated : DB.todayISO(),
+        applicantId: existing ? existing.applicantId : undefined
       };
       var saved = DB.saveUser(record, !existing);
       if (!saved.ok) { App.toast(saved.error, "error"); return; }
@@ -2460,6 +2684,8 @@ var Navigation = (function () {
   /** Show one page and draw its content. */
   function go(id) {
     if (!SECTIONS[id]) id = "dashboard";
+    var user = App.getCurrentUser();
+    if (user && user.role === "Viewer") id = "records";
     current = id;
 
     document.querySelectorAll(".page").forEach(function (page) {
@@ -2471,8 +2697,9 @@ var Navigation = (function () {
       if (active) item.setAttribute("aria-current", "page"); else item.removeAttribute("aria-current");
     });
 
-    document.getElementById("page-title").textContent = SECTIONS[id].title;
-    document.title = SECTIONS[id].title + " | City Housing Development Office";
+    var pageTitle = id === "records" && user && user.role === "Viewer" ? "My Profile" : SECTIONS[id].title;
+    document.getElementById("page-title").textContent = pageTitle;
+    document.title = pageTitle + " | City Housing Development Office";
     if (window.location.hash !== "#" + id) window.location.hash = id;
 
     updateCounts();
@@ -2484,12 +2711,18 @@ var Navigation = (function () {
 
   /** Redraw the page that is currently open. */
   function refresh() {
-    if (current) SECTIONS[current].render();
+    if (!current) return;
+    var user = App.getCurrentUser();
+    if (user && user.role === "Viewer" && current !== "records") {
+      go("records");
+      return;
+    }
+    SECTIONS[current].render();
   }
 
   /** Update the small number badges in the sidebar. */
   function updateCounts() {
-    var list = DB.getApplicants();
+    var list = App.getVisibleApplicants();
     var counts = {
       records: list.length,
       approved: list.filter(function (a) { return a.status === "Approved"; }).length,

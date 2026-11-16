@@ -2260,7 +2260,7 @@ var Editing = (function () {
    Every number is counted from the stored applicant records
    each time the page is drawn, so nothing is typed in by hand.
    ========================================================== */
-var Dashboard = (function () {
+var landingPage = (function () {
   "use strict";
 
   var ACTIVITY_ICONS = {
@@ -2689,7 +2689,7 @@ var Navigation = (function () {
 
   /* id -> page title and the function that draws it */
   var SECTIONS = {
-    dashboard: { title: "Dashboard",           render: function () { Dashboard.render(); } },
+    dashboard: { title: "Dashboard",           render: function () { landingPage.render(); } },
     users:     { title: "Users",               render: function () { Users.render(); } },
     dataform:  { title: "Data Form",           render: function () { DataForm.render(); } },
     records:   { title: "Applicants / Records", render: function () { Applicants.render("records"); } },
